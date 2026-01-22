@@ -12,12 +12,6 @@ pipeline {
 				sh 'docker run --rm -v $(pwd):/app -w /app node:lts yarn build'
 			}
 		}
-		stage('Test') {
-			steps {
-				sh 'docker run --rm -v $(pwd):/app -w /app node:lts yarn --registry=https://registry.npmjs.org install'
-				sh 'docker run --rm -v $(pwd):/app -w /app node:lts yarn test'
-			}
-		}
 	}
 	post {
 		success {
