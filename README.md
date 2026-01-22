@@ -101,5 +101,4 @@ await ntfyClient.publish({ ... });
 ```bash
 yarn install
 yarn build
-yarn test
 ```
