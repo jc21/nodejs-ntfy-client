@@ -21,14 +21,9 @@ pipeline {
 			withNPM(npmrcConfig: 'npm-github-jc21') {
 				sh 'docker run --rm -v $(pwd):/app -w /app node:lts npm --registry=https://npm.pkg.github.com/ publish --access public || echo "Skipping publish"'
 			}
-			juxtapose event: 'success'
-			sh 'figlet "SUCCESS"'
-		}
-		failure {
-			juxtapose event: 'failure'
-			sh 'figlet "FAILURE"'
 		}
 		always {
+			printResult(true)
 			sh 'docker run --rm -v $(pwd):/app -w /app node:lts chown -R $(id -u):$(id -g) *'
 		}
 	}
