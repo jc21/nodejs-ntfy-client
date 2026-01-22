@@ -12,16 +12,18 @@ pipeline {
 				sh 'docker run --rm -v $(pwd):/app -w /app node:lts yarn build'
 			}
 		}
-	}
-	post {
-		success {
-			withNPM(npmrcConfig: 'npm-jc21') {
-				sh 'docker run --rm -v $(pwd):/app -w /app node:lts npm --registry=https://registry.npmjs.org publish --access public || echo "Skipping publish"'
-			}
-			withNPM(npmrcConfig: 'npm-github-jc21') {
-				sh 'docker run --rm -v $(pwd):/app -w /app node:lts npm --registry=https://npm.pkg.github.com/ publish --access public || echo "Skipping publish"'
+		stage('Publish') {
+			steps {
+				withNPM(npmrcConfig: 'npm-jc21') {
+					sh 'docker run --rm -v $(pwd):/app -w /app node:lts npm --registry=https://registry.npmjs.org publish --access public || echo "Skipping publish"'
+				}
+				withNPM(npmrcConfig: 'npm-github-jc21') {
+					sh 'docker run --rm -v $(pwd):/app -w /app node:lts npm --registry=https://npm.pkg.github.com/ publish --access public || echo "Skipping publish"'
+				}
 			}
 		}
+	}
+	post {
 		always {
 			printResult(true)
 			sh 'docker run --rm -v $(pwd):/app -w /app node:lts chown -R $(id -u):$(id -g) *'
